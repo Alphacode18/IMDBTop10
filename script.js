@@ -1,7 +1,7 @@
 const puppeteer = require('puppeteer');
 
 async function scrape(url) {
-    const browser = await puppeteer.launch({headless: false});
+    const browser = await puppeteer.launch();
     const page = await browser.newPage();
     await page.goto(url, {waitUntil: 'networkidle0'});
     const data = await page.evaluate(() => {
@@ -12,8 +12,8 @@ async function scrape(url) {
         }
         return titleArray;
     });
-    data.array.forEach(element => {
-        console.log(element);
+    data.forEach(element => {
+        console.log(element.substring(0, element.indexOf('(')));
     });
     await browser.close();
 }
