@@ -5,8 +5,8 @@ async function scrape(url) {
     const page = await browser.newPage();
     await page.goto(url, {waitUntil: 'networkidle0'});
     const data = await page.evaluate(() => {
-        const titles = document.querySelector('td[class=titleColumn]').innerText;
-        return titles;
+        const title = document.querySelector('td[class=titleColumn]').innerText;
+        return title.substring(0, title.indexOf('('));
     });
     console.log(data);
     await browser.close();
