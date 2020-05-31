@@ -1,15 +1,17 @@
 const puppeteer = require('puppeteer');
 
 async function scrape(url) {
-    const browser = await puppeteer.launch();
+    const browser = await puppeteer.launch({headless: false});
     const page = await browser.newPage();
-    await page.goto(url);
-    const titles = page.evaluate(() => {
-        return document.getElementsByClassName('titleColumn').innerText;
+    await page.goto(url, {waitUntil: 'networkidle0'});
+    const data = await page.evaluate(() => {
+        const titles = document.querySelector('td[class=titleColumn]').innerText;
+        return titles;
     });
-    for (let i = 0; i < (await titles).length; i++) {
-        await console.log(titles[i]);
-    }
+    console.log(data);
+    await browser.close();
 }
 
-scrape('https://www.imdb.com/chart/moviemeter/?sort=ir,desc&mode=simple&page=1');
+const movies = scrape('https://www.imdb.com/chart/moviemeter/?sort=ir,desc&mode=simple&page=1');
+
+console.log(movies);
